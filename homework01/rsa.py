@@ -40,7 +40,13 @@ def gcd(a: int, b: int) -> int:
     >>> gcd(3, 7)
     1
     """
-    # PUT YOUR CODE HERE
+    c=min(a,b)
+    
+    for i in range(c, 0, -1):
+        
+        if a%i == 0 and b%i == 0:
+            return i
+            
     pass
 
 
