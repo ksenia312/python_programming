@@ -12,6 +12,7 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     'Sbwkrq3.6'
     >>> encrypt_caesar("")
     ''
+
     """
     ciphertext = ""
     shift=shift%26
