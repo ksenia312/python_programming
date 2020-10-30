@@ -13,7 +13,21 @@ def is_prime(n: int) -> bool:
     >>> is_prime(8)
     False
     """
-    # PUT YOUR CODE HERE
+    
+    a = [i for i in range(1,n+1)]
+    p = 1
+    while p!=n:
+        p+=1
+        for i in range(n):
+            if a[i]%p == 0 and a[i] !=p:
+                a[i] = 0   
+    if a[i] != 0:
+        return True
+    else:
+        return False
+            
+
+
     pass
 
 
