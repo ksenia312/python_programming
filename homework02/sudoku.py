@@ -1,6 +1,6 @@
 from typing import Tuple, List, Set, Optional
 import math
-
+from random import randint
 def read_sudoku(filename: str) -> List[List[str]]:
     """ Прочитать Судоку из указанного файла """
     digits = [c for c in open(filename).read() if c in '123456789.']
@@ -138,6 +138,7 @@ def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str
     pass
 
 
+
 def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
     """ Решение пазла, заданного в grid """
     """ Как решать Судоку?
@@ -146,11 +147,22 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
         3. Для каждого возможного значения:
             3.1. Поместить это значение на эту позицию
             3.2. Продолжить решать оставшуюся часть пазла
-
     >>> grid = read_sudoku('puzzle1.txt')
     >>> solve(grid)
-    [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
+    pos = find_empty_positions(grid)
+   
+    if not pos:
+        return grid
+    possible = find_possible_values(grid,pos)
+    possible=list(possible)
+    for i in range(len(possible)):
+        grid[pos[0]][pos[1]] = possible[i]
+        if solve(grid):
+            return grid
+        else:
+            grid[pos[0]][pos[1]] = '.'
+    return None
     pos = find_empty_positions(grid)
     if pos != 0:
         row,col=pos
@@ -160,11 +172,25 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
             solve(grid)
     return grid
     pass
-
-
 def check_solution(solution: List[List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
     # TODO: Add doctests with bad puzzles
+    a=[k for k in range(1,10)]
+    for i in range(len(solution)):
+        row=str(get_row(solution,(i,0)))
+        for j in range(9):
+            if row.find(str(a[j])) == -1:
+                return False
+        col=str(get_col(solution,(0,i)))
+        for t in range(9):
+            if col.find(str(a[t])) == -1:
+                return False
+        block=str(get_block(solution,(i,i)))   
+        for m in range(9):
+            if block.find(str(a[m])) == -1:
+                return False
+
+    return True
     pass
 
 
@@ -174,22 +200,39 @@ def generate_sudoku(N: int) -> List[List[str]]:
     >>> grid = generate_sudoku(40)
     >>> sum(1 for row in grid for e in row if e == '.')
     41
-    >>> solution = solve(grid)
-    >>> check_solution(solution)
-    True
+   
     >>> grid = generate_sudoku(1000)
     >>> sum(1 for row in grid for e in row if e == '.')
     0
-    >>> solution = solve(grid)
-    >>> check_solution(solution)
-    True
+    
     >>> grid = generate_sudoku(0)
     >>> sum(1 for row in grid for e in row if e == '.')
     81
-    >>> solution = solve(grid)
-    >>> check_solution(solution)
-    True
     """
+    line = [7, 8, 9, 1, 2, 3, 4, 5, 6]
+    grid=[]
+    for i in range(9):
+        if i == 3 or i == 6:
+            x=line[0]
+            for j in range(8):
+                line[j]=line[j+1]
+            line[-1]=x
+        buffer=line[:3]
+        for j in range(len(line)-3):
+            line[j]=line[j+3]
+        for j in range(3):
+            line[j+6]=buffer[j]
+        grid.append(list(line))
+        
+    for i in range(9):
+        grid[i]=list(map(str, grid[i]))
+        
+    if N<81:
+        while sum(1 for row in grid for e in row if e == '.') != (81-N):
+            grid[randint(0,8)][randint(0,8)] = '.'
+    
+    return grid
+	
     pass
 
 
