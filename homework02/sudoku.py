@@ -1,7 +1,6 @@
 from typing import Tuple, List, Set, Optional
 import math
 from random import randint
-
 def read_sudoku(filename: str) -> List[List[str]]:
     """ Прочитать Судоку из указанного файла """
     digits = [c for c in open(filename).read() if c in '123456789.']
@@ -151,7 +150,6 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
     >>> grid = read_sudoku('puzzle1.txt')
     >>> solve(grid)
     """
-    
     pos = find_empty_positions(grid)
    
     if not pos:
@@ -165,8 +163,15 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
         else:
             grid[pos[0]][pos[1]] = '.'
     return None
-
-
+    pos = find_empty_positions(grid)
+    if pos != 0:
+        row,col=pos
+        vse=find_possible_values(grid, pos)
+        for i in range(len(vse)):
+            grid[row][col]=i
+            solve(grid)
+    return grid
+    pass
 def check_solution(solution: List[List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
     # TODO: Add doctests with bad puzzles
