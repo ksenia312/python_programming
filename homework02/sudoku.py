@@ -7,7 +7,6 @@ def read_sudoku(filename: str) -> List[List[str]]:
     grid = group(digits, 9)
     return grid
 
-
 def display(grid: List[List[str]]) -> None:
     """Вывод Судоку """
     width = 2
