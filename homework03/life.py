@@ -14,8 +14,8 @@ class GameOfLife:
     def __init__(
         self,
         size: Tuple[int, int],
-        randomize: bool=True,
-        max_generations: Optional[float]=float('inf')
+        randomize: bool = True,
+        max_generations: Optional[float] = float('inf')
     ) -> None:
         # Размер клеточного поля
         self.rows, self.cols = size
@@ -28,7 +28,7 @@ class GameOfLife:
         # Текущее число поколений
         self.generations = 1
 
-    def create_grid(self, randomize: bool=False) -> Grid:
+    def create_grid(self, randomize: bool = False) -> Grid:
         # Copy from previous assignment
         pass
 
