@@ -10,7 +10,7 @@ Grid = List[List[int]]
 
 class GameOfLife:
 
-    def __init__(self, width: int = 1000, height: int = 800, cell_size: int = 10, speed: int = 20) -> None:
+    def __init__(self, width: int = 1000, height: int = 800, cell_size: int = 15, speed: int = 40) -> None:
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -119,6 +119,7 @@ class GameOfLife:
             cells_cort.append((h + 1, w + 1))
         for k in cells_cort:
             cells.append(self.grid[k[0]][k[1]])
+
         return cells
 
     def get_next_generation(self) -> Grid:
@@ -129,29 +130,16 @@ class GameOfLife:
         ----------
         out : Grid
             Новое поколение клеток.
-
-        new_grid = self.grid
-        for i in range(self.cell_height):
-            for j in range(self.cell_width):
-                a = self.get_neighbours((i, j))
-
-                n = 0  # счетчик живых соседей
-                for k in a:
-
-                    if self.grid[k[0]][k[1]] == 1:
-                        n += 1
-                if self.grid[i][j] == 0 and n == 3:
-                    new_grid[i][j] = 1
-                elif self.grid[i][j] == 1 and n != 2 and n != 3:
-                    new_grid[i][j] = 0
         """
         new_grid = self.grid
         for i in range(self.cell_height):
             for j in range(self.cell_width):
                 neighbours = self.get_neighbours((i, j))
-                if self.grid[i][j] == 0 and sum(neighbours) == 3:
+                if new_grid[i][j] == 0 and sum(neighbours) == 3:
                     new_grid[i][j] = 1
-                elif self.grid[i][j] == 1 and sum(neighbours) != 2 and sum(neighbours) != 3:
+                elif new_grid[i][j] == 1 and (sum(neighbours) == 2 or sum(neighbours) == 3):
+                    new_grid[i][j] = 1
+                else:
                     new_grid[i][j] = 0
         return new_grid
 
@@ -173,8 +161,10 @@ class GameOfLife:
             self.draw_grid()
             self.draw_lines()
             # Выполнение одного шага игры (обновление состояния ячеек)
-            self.grid = self.get_next_generation()
             pygame.display.flip()
+            next_grid = self.get_next_generation()
+            self.grid = next_grid
+
 
             clock.tick(self.speed)
         pygame.quit()
