@@ -10,7 +10,7 @@ Grid = List[List[int]]
 
 class GameOfLife:
 
-    def __init__(self, width: int = 1000, height: int = 800, cell_size: int = 15, speed: int = 40) -> None:
+    def __init__(self, width: int = 1000, height: int = 800, cell_size: int = 10, speed: int = 30) -> None:
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -27,6 +27,31 @@ class GameOfLife:
         # Скорость протекания игры
         self.speed = speed
         self.grid = self.create_grid(randomize=True)
+
+    def run(self) -> None:
+        """ Запустить игру """
+        pygame.init()
+        clock = pygame.time.Clock()
+        pygame.display.set_caption('Game of Life')
+
+        self.screen.fill(pygame.Color('white'))
+        # Создание списка клеток
+
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    running = False
+            # Отрисовка списка клеток
+
+            self.draw_grid()
+            self.draw_lines()
+            # Выполнение одного шага игры (обновление состояния ячеек)
+            self.grid = self.get_next_generation()
+
+            pygame.display.flip()
+            clock.tick(self.speed)
+        pygame.quit()
 
     def draw_lines(self) -> None:
         """ Отрисовать сетку """
@@ -119,7 +144,6 @@ class GameOfLife:
             cells_cort.append((h + 1, w + 1))
         for k in cells_cort:
             cells.append(self.grid[k[0]][k[1]])
-
         return cells
 
     def get_next_generation(self) -> Grid:
@@ -131,43 +155,19 @@ class GameOfLife:
         out : Grid
             Новое поколение клеток.
         """
-        new_grid = self.grid
+        new_grid = []
         for i in range(self.cell_height):
+            new_grid.append([])
             for j in range(self.cell_width):
                 neighbours = self.get_neighbours((i, j))
-                if new_grid[i][j] == 0 and sum(neighbours) == 3:
-                    new_grid[i][j] = 1
-                elif new_grid[i][j] == 1 and (sum(neighbours) == 2 or sum(neighbours) == 3):
-                    new_grid[i][j] = 1
+                if sum(neighbours) == 3:
+                    new_grid[i].append(1)
+                elif self.grid[i][j] == 1 and sum(neighbours) == 2:
+                    new_grid[i].append(1)
                 else:
-                    new_grid[i][j] = 0
+                    new_grid[i].append(0)
+
         return new_grid
-
-    def run(self) -> None:
-        """ Запустить игру """
-        pygame.init()
-        clock = pygame.time.Clock()
-        pygame.display.set_caption('Game of Life')
-
-        self.screen.fill(pygame.Color('white'))
-        # Создание списка клеток
-
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    running = False
-            # Отрисовка списка клеток
-            self.draw_grid()
-            self.draw_lines()
-            # Выполнение одного шага игры (обновление состояния ячеек)
-            pygame.display.flip()
-            next_grid = self.get_next_generation()
-            self.grid = next_grid
-
-
-            clock.tick(self.speed)
-        pygame.quit()
 
 
 if __name__ == '__main__':
