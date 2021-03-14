@@ -105,19 +105,25 @@ class GameOfLife:
         """
         Прочитать состояние клеток из указанного файла.
         """
-        pass
+        with open(filename, "r") as to_read:
+            fin = to_read.read()
+        return fin
 
-    def save(filename: pathlib.Path) -> None:
+    def save(self, filename: pathlib.Path) -> None:
         """
         Сохранить текущее состояние клеток в указанный файл.
         """
-        pass
+        with open(filename, "w") as to_save: #w it's for write
+            for i in self.curr_generation:
+                to_save.write(" ".join(i))
 
-'''
+
+
+
 a = 1
 while a != 0:
     game = GameOfLife((5, 5))
     grid = game.get_next_generation()
     a = game.get_neighbours((0, 0))
     print(grid)
-'''
+
