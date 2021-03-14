@@ -12,30 +12,30 @@ class GUI(UI):
         self.speed = speed
         super().__init__(life)
 
-    def draw_lines(self) -> None:
-        for x in range(0, self.cols, self.cell_size):
-            pygame.draw.line(self.screen, pygame.Color('#889ac2'), (x, 0), (x, self.rows))
-        for y in range(0, self.rows, self.cell_size):
-            pygame.draw.line(self.screen, pygame.Color('#889ac2'), (0, y), (self.cols, y))
+    def draw_lines(self, life) -> None:
+        for x in range(0, life.cols, self.cell_size):
+            pygame.draw.line(life.screen, pygame.Color('#889ac2'), (x, 0), (x, life.rows))
+        for y in range(0, life.rows, self.cell_size):
+            pygame.draw.line(life.screen, pygame.Color('#889ac2'), (0, y), (life.cols, y))
 
-    def draw_grid(self) -> None:
-        grid = self.curr_generation
-        for i in range(self.self.rows):
-            for j in range(self.self.cols):
+    def draw_grid(self, life) -> None:
+        grid = life.curr_generation
+        for i in range(life.rows):
+            for j in range(life.cols):
                 if grid[i][j] == 1:
                     pygame.draw.rect(
-                        self.screen,
+                        life.screen,
                         pygame.Color('#260d94'),
                         pygame.Rect(j * self.cell_size, i * self.cell_size, self.cell_size, self.cell_size)
                     )
                 else:
                     pygame.draw.rect(
-                        self.screen,
+                        life.screen,
                         pygame.Color('white'),
                         pygame.Rect(j * self.cell_size, i * self.cell_size, self.cell_size, self.cell_size)
                     )
 
-    def run(self) -> None:
+    def runn(self, life) -> None:
         pygame.init()
         clock = pygame.time.Clock()
         pygame.display.set_caption('Game of Life')
@@ -48,16 +48,11 @@ class GUI(UI):
                     running = False
             # Отрисовка списка клеток
 
-            self.draw_grid()
-            self.draw_lines()
+            self.draw_grid(life)
+            self.draw_lines(life)
             # Выполнение одного шага игры (обновление состояния ячеек)
-            self.curr_generation = self.get_next_generation()
+            life.curr_generation = life.get_next_generation()
 
             pygame.display.flip()
             clock.tick(self.speed)
         pygame.quit()
-
-
-if __name__ == '__main__':
-    game = GUI((5, 5))
-    game.run()

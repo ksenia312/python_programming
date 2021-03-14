@@ -16,6 +16,7 @@ class GameOfLife:
             max_generations: Optional[float] = float('inf')
     ) -> None:
         # Размер клеточного поля
+
         self.rows, self.cols = size
         # Предыдущее поколение клеток
         self.prev_generation = self.create_grid()
@@ -113,17 +114,16 @@ class GameOfLife:
         """
         Сохранить текущее состояние клеток в указанный файл.
         """
-        with open(filename, "w") as to_save: #w it's for write
+        with open(filename, "w") as to_save:  # w it's for write
             for i in self.curr_generation:
                 to_save.write(" ".join(i))
 
 
+if __name__ == '__main__':
+    a = 1
 
-
-a = 1
-while a != 0:
-    game = GameOfLife((5, 5))
+    game = GameOfLife((5, 6))
     grid = game.get_next_generation()
     a = game.get_neighbours((0, 0))
-    print(grid)
-
+    b = game.cols
+    print(grid, b)
