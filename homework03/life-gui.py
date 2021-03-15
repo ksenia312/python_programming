@@ -5,14 +5,13 @@ from life import GameOfLife
 from ui import UI
 
 
-class GUI():
+class GUI(UI):
 
     def __init__(self, life: GameOfLife, cell_size: int = 20, speed: int = 10) -> None:
 
+        super().__init__(life)
         self.cell_size = cell_size
         self.speed = speed
-        super().__init__()
-        self.life = life
         self.screen_size = self.life.cols * self.cell_size, self.life.rows * self.cell_size
         self.screen = pygame.display.set_mode(self.screen_size)
 
@@ -65,5 +64,4 @@ class GUI():
 if __name__ == '__main__':
     game = GameOfLife((50, 50))
     g = GUI(game)
-
     g.runn()

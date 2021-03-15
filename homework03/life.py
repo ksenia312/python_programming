@@ -9,12 +9,15 @@ Grid = List[Cells]
 
 
 class GameOfLife:
+
+
     def __init__(
             self,
             size: Tuple[int, int],
             randomize: bool = True,
             max_generations: Optional[float] = float('inf')
     ) -> None:
+
         # Размер клеточного поля
 
         self.rows, self.cols = size
@@ -126,4 +129,4 @@ if __name__ == '__main__':
     grid = game.get_next_generation()
     a = game.get_neighbours((0, 0))
     b = game.cols
-    print(grid, b)
+    print(grid, b, game.curr_generation)
