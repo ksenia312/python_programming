@@ -1,14 +1,17 @@
+import argparse
+
 import pygame
 from pygame.locals import *
 
 from life import GameOfLife
+from ui import UI
 
 
-class GUI:
+class GUI(UI):
 
     def __init__(self, life: GameOfLife, cell_size: int = 20, speed: int = 10) -> None:
 
-        self.life = life
+        super().__init__(life)
 
         self.cell_size = cell_size
         self.speed = speed
@@ -38,7 +41,7 @@ class GUI:
                         pygame.Rect(j * self.cell_size, i * self.cell_size, self.cell_size, self.cell_size)
                     )
 
-    def runn(self) -> None:
+    def run(self) -> None:
         pygame.init()
         clock = pygame.time.Clock()
         pygame.display.set_caption('Game of Life')
@@ -50,7 +53,6 @@ class GUI:
                 if event.type == QUIT:
                     running = False
             # Отрисовка списка клеток
-
             self.draw_grid()
             self.draw_lines()
             # Выполнение одного шага игры (обновление состояния ячеек)
@@ -61,7 +63,28 @@ class GUI:
         pygame.quit()
 
 
-if __name__ == '__main__':
-    game = GameOfLife((50, 50))
-    g = GUI(game)
-    g.runn()
+if __name__ == "__main__":
+    ''''''
+    parser = argparse.ArgumentParser(description="Let's play the Game of Life", prog="gof-gui.py")
+    parser.add_argument('--width', type=int, default=640,
+                        help='Enter width of window with game')
+    parser.add_argument('--height', type=int, default=480,
+                        help='Enter height of window with game')
+    parser.add_argument('--cell_size', type=int, default=20,
+                        help='Enter cell size')
+    args = parser.parse_args()
+    w = args.width > 0
+    h = args.height > 0
+    c = args.cell_size > 0
+    if w and h and c and args.width//args.cell_size > 0 and args.height//args.cell_size > 0:
+        gui = GUI(GameOfLife((args.width//args.cell_size, args.height//args.cell_size)), cell_size=args.cell_size)
+        gui.run()
+    else:
+        print('The input received incorrect values. Try again please')
+        if not w:
+            print('Incorrect value of width')
+        if not h:
+            print('Incorrect value of height')
+        if not c:
+            print('Incorrect value of cell size')
+
