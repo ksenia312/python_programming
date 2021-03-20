@@ -48,18 +48,28 @@ class GUI(UI):
         # self.screen.fill(pygame.Color('white'))
         # Создание списка клеток
         running = True
+        stop = False
         while running:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     running = False
-            # Отрисовка списка клеток
-            self.draw_grid()
-            self.draw_lines()
+                if event.type == KEYDOWN:
+                    stop = not stop
+                if event.type == MOUSEBUTTONDOWN and stop:  # пауза при нажатии любой кнопки клавиатуры
+                    y, x = pygame.mouse.get_pos()
+                    self.life.curr_generation[x // self.cell_size][y // self.cell_size] = \
+                        int(not self.life.curr_generation[x // self.cell_size][y // self.cell_size])
+                    # Отрисовка списка клеток
+                    self.draw_grid()
+                    self.draw_lines()
+                    pygame.display.flip()
             # Выполнение одного шага игры (обновление состояния ячеек)
-            self.life.curr_generation = self.life.get_next_generation()
-
-            pygame.display.flip()
-            clock.tick(self.speed)
+            if not stop:
+                self.life.curr_generation = self.life.get_next_generation()
+                self.draw_grid()
+                self.draw_lines()
+                pygame.display.flip()
+                clock.tick(self.speed)
         pygame.quit()
 
 
@@ -76,8 +86,8 @@ if __name__ == "__main__":
     w = args.width > 0
     h = args.height > 0
     c = args.cell_size > 0
-    if w and h and c and args.width//args.cell_size > 0 and args.height//args.cell_size > 0:
-        gui = GUI(GameOfLife((args.width//args.cell_size, args.height//args.cell_size)), cell_size=args.cell_size)
+    if w and h and c and args.width // args.cell_size > 0 and args.height // args.cell_size > 0:
+        gui = GUI(GameOfLife((args.width // args.cell_size, args.height // args.cell_size)), cell_size=args.cell_size)
         gui.run()
     else:
         print('The input received incorrect values. Try again please')
@@ -87,4 +97,3 @@ if __name__ == "__main__":
             print('Incorrect value of height')
         if not c:
             print('Incorrect value of cell size')
-
